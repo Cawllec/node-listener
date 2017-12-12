@@ -1,0 +1,7 @@
+[
+    {
+        "path":"/",
+        "response": 200,
+        "parse": true
+    }
+]
