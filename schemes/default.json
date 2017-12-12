@@ -1,7 +1,15 @@
-[
-    {
-        "path":"/",
-        "response": 200,
-        "parse": true
-    }
-]
+{
+    "port": 62000,
+    "https": {
+        "cert": "./cert.pem",
+        "key": "./key.pem",
+        "port": 62443
+    },
+    "paths": [
+        {
+            "path":"/",
+            "response": 200,
+            "parse": true
+        }
+    ]
+}

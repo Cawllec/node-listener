@@ -9,21 +9,16 @@ const express = require('express'),
     {cleanEnv, num} = require('envalid'),
     util = require('util');
 
-const env = cleanEnv(process.env, {
-    PORT: num({default: 62000}),
-    SPORT: num({default: 62443})
-});
 
-const key = fs.readFileSync('key.pem');
-const cert = fs.readFileSync('cert.pem');
 
 const definitionFile = process.argv[2] || 'default.json'
-const definition = JSON.parse(fs.readFileSync(definitionFile))
+const def = JSON.parse(fs.readFileSync(definitionFile))
+const paths = def['paths'];
 
 app.use(json());
 app.use(urlencoded({extended: true}));
 
-definition.forEach(pathDef => {
+paths.forEach(pathDef => {
     console.log(`Adding path:`);
     console.log(util.inspect(pathDef, {depth: null}));
     switch (pathDef['method']) {
@@ -92,9 +87,16 @@ function parseRequest(req) {
     }
 }
 
-http.createServer(app).listen(env.PORT, () => {
-    console.log(`HTTP server listening on port ${env.PORT}`);
+http.createServer(app).listen(def['port'], () => {
+    console.log(`HTTP server listening on port ${def['port']}`);
 });
-https.createServer({key: key, cert: cert}, app).listen(env.SPORT, () => {
-    console.log(`HTTPS server listening on port ${env.SPORT}`);
-});
+
+if (def['https']) {
+    const httpsdef = def['https']
+    const key = fs.readFileSync(httpsdef['key']);
+    const cert = fs.readFileSync(httpsdef['cert']);
+    https.createServer({key: key, cert: cert}, app).listen(httpsdef['port'], () => {
+        console.log(`HTTPS server listening on port ${httpsdef['port']}`);
+    });
+}
+
