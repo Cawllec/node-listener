@@ -61,7 +61,9 @@ paths.forEach(pathDef => {
         } else {
             responseStatus = 200;
         }
-	console.log(`Responding with ${responseStatus}`);
+        if (pathDef['parse']) {
+            console.log(`Responding with ${responseStatus}`);
+        }
         res.status(responseStatus).end()
     });
 });
