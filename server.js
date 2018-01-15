@@ -6,10 +6,8 @@ const express = require('express'),
     http = require('http'),
     https = require('https'),
     {json, urlencoded} = require('body-parser'),
-    {cleanEnv, num} = require('envalid'),
+    multer = require('multer'),
     util = require('util');
-
-
 
 const definitionFile = process.argv[2] || 'default.json'
 const def = JSON.parse(fs.readFileSync(definitionFile))
@@ -17,6 +15,8 @@ const paths = def['paths'];
 
 app.use(json());
 app.use(urlencoded({extended: true}));
+
+const uploader = multer({dest: 'uploads/'})
 
 paths.forEach(pathDef => {
     console.log(`Adding path:`);
@@ -45,7 +45,15 @@ paths.forEach(pathDef => {
         default:
             method = app.use;
     }
-    app.use(pathDef['path'], (req, res) => {
+    if (pathDef['upload']) {
+        app.use(pathDef['path'], uploader.any(), getHandler(pathDef));
+    } else {
+        app.use(pathDef['path'], getHandler(pathDef));
+    }
+});
+
+function getHandler(pathDef) {
+    return (req, res) => {
         if (pathDef['parse']) {
             parseRequest(req)
         }
@@ -65,8 +73,8 @@ paths.forEach(pathDef => {
             console.log(`Responding with ${responseStatus}`);
         }
         res.status(responseStatus).end()
-    });
-});
+    };
+}
 
 function parseRequest(req) {
     console.log(`Interception:`)
@@ -78,6 +86,10 @@ function parseRequest(req) {
     if (req.body) {
         console.log(`   With body:`);
         console.log(util.inspect(req.body, {depth: null}));
+    }
+    if (req.files) {
+        console.log(`   With files:`)
+        console.log(util.inspect(req.files, {depth: null}));
     }
     if (req.params) {
         console.log(`   With params:`);
