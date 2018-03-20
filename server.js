@@ -7,7 +7,8 @@ const express = require('express'),
     https = require('https'),
     {json, urlencoded} = require('body-parser'),
     multer = require('multer'),
-    util = require('util');
+    util = require('util'),
+    yaml = require('write-yaml');
 
 const definitionFile = process.argv[2] || 'default.json'
 const def = JSON.parse(fs.readFileSync(definitionFile))
@@ -75,7 +76,11 @@ function getHandler(pathDef) {
             console.log(`Responding with ${responseStatus}`);
         }
         if (pathDef['save']) {
-            saveRequest(pathDef, req);
+            saveRequest(pathDef, {
+                headers: req.headers,
+                body: req.body,
+                params: req.params
+            });
         }
         res.set('Access-Control-Allow-Origin', '*');
         res.set('Access-Control-Allow-Headers', '*')
@@ -83,13 +88,14 @@ function getHandler(pathDef) {
     };
 }
 
-function saveRequest(pathDef, req) {
-    filename = `${pathDef['method']}.${pathDef['path'].replace('/', '')}.${Date.now()}.${Math.floor((Math.random()*100000))}.json`;
+function saveRequest(pathDef, data) {
+    filename = `${pathDef['method']}.${pathDef['path'].replace('/', '')}.${Date.now()}.${Math.floor((Math.random()*100000))}`;
     console.log(`Saving to file ${filename}`);
-    fs.writeFileSync(`output/${filename}`, JSON.stringify({
-        headers: req.headers,
-        body: req.body
-    }, null, 4));
+    if (pathDef['save'] === 'yaml') {
+        yaml.sync(`output/${filename}.yaml`, data)
+    } else {
+        fs.writeFileSync(`output/${filename}.json`, JSON.stringify(data, null, 4));
+    }
 }
 
 function parseRequest(req) {
