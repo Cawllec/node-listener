@@ -32,3 +32,4 @@ Schemes customize the server setup.  A default scheme is run if none is provided
   - **method**: The method to listen for i.e. `GET`, `POST`
   - **response**: Response to return.  If this is an array of response codes then the response will be randomly selected from them.
   - **parse**: Parse and output the headers/body of received requests
+  - **save**: If set the requests will be saved to the `output` folder. If set to "YAML" `.yaml` files will be written, otherwise `.json` will be used.
