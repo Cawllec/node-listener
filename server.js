@@ -13,7 +13,9 @@ const definitionFile = process.argv[2] || 'default.json'
 const def = JSON.parse(fs.readFileSync(definitionFile))
 const paths = def['paths'];
 
-app.use(json());
+app.use(json({
+    'limit': '1mb'
+}));
 app.use(urlencoded({extended: true}));
 
 const uploader = multer({dest: 'uploads/'})
@@ -72,8 +74,22 @@ function getHandler(pathDef) {
         if (pathDef['parse']) {
             console.log(`Responding with ${responseStatus}`);
         }
-        res.status(responseStatus).end()
+        if (pathDef['save']) {
+            saveRequest(pathDef, req);
+        }
+        res.set('Access-Control-Allow-Origin', '*');
+        res.set('Access-Control-Allow-Headers', '*')
+        res.status(responseStatus).end();
     };
+}
+
+function saveRequest(pathDef, req) {
+    filename = `${pathDef['method']}.${pathDef['path'].replace('/', '')}.${Date.now()}.${Math.floor((Math.random()*100000))}.json`;
+    console.log(`Saving to file ${filename}`);
+    fs.writeFileSync(`output/${filename}`, JSON.stringify({
+        headers: req.headers,
+        body: req.body
+    }, null, 4));
 }
 
 function parseRequest(req) {
