@@ -3,5 +3,6 @@ cert.pem
 key.pem
 schemes/
 output/
+uploads/
 package-lock.json
 yarn.lock
