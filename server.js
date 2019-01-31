@@ -15,7 +15,7 @@ const def = JSON.parse(fs.readFileSync(definitionFile))
 const paths = def['paths'];
 
 app.use(json({
-    'limit': '1mb'
+    'limit': '2mb'
 }));
 app.use(urlencoded({extended: true}));
 
