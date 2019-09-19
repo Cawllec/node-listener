@@ -57,6 +57,10 @@ paths.forEach(pathDef => {
 
 function getHandler(pathDef) {
     return (req, res) => {
+        console.log(`Interception:`)
+        console.log(`   Of type:    ${req.method}`);
+        console.log(`   From host:  ${req.hostname}`);
+        console.log(`   To route:   ${req.originalUrl}`);
         if (pathDef['parse']) {
             parseRequest(req)
         }
@@ -99,10 +103,6 @@ function saveRequest(pathDef, data) {
 }
 
 function parseRequest(req) {
-    console.log(`Interception:`)
-    console.log(`   Of type:    ${req.method}`);
-    console.log(`   From host:  ${req.hostname}`);
-    console.log(`   To route:   ${req.originalUrl}`);
     console.log(`   With headers:`);
     console.log(util.inspect(req.headers, {depth: null}));
     if (req.body) {
