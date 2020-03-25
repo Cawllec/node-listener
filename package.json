@@ -2,6 +2,7 @@
   "name": "listener",
   "version": "1.0.0",
   "description": "",
+  "repository": "https://github.com/Cawllec/node-listener.git",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
