@@ -19,7 +19,7 @@ jobs:
         run: |
           echo "${{ secrets.TEST_GPG_KEY }}" | base64 --decode | gpg --import
       - name: Sign assets
-        uses: cawllec/bugsnag-release-signer@initial-work
+        uses: Cawllec/bugsnag-release-signer@initial-work
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           release_tag: ${{ github.event.inputs.tag }}
