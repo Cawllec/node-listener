@@ -17,7 +17,7 @@ jobs:
           sudo apt-get install -y gnupg
       - name: Import GPG key
         run: |
-          echo "${{ secrets.TEST_GPG_KEY }}" | base64 --decode | gpg --import
+          echo "${{ secrets.TEST_GPG_KEY }}" | base64 --decode | gpg --batch --import
       - name: Sign assets
         uses: Cawllec/release-signer@v0.1.0
         with:
