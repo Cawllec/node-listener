@@ -19,7 +19,7 @@ jobs:
         run: |
           echo "${{ secrets.TEST_GPG_KEY }}" | base64 --decode | gpg --batch --import
       - name: Sign assets
-        uses: Cawllec/release-signer@main
+        uses: Cawllec/release-signer@add-packages
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           organization: ${{ github.repository_owner }}
