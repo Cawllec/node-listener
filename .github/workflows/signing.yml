@@ -22,8 +22,7 @@ jobs:
         uses: Cawllec/release-signer@add-packages
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          organization: ${{ github.repository_owner }}
-          repository: ${{ github.repository }}
+          full_repository: ${{ github.repository }}
           release_tag: ${{ github.event.inputs.tag }}
           key_id: ${{ secrets.TEST_GPG_KEY_ID }}
           key_passphrase: ${{ secrets.TEST_GPG_PASSPHRASE }}
