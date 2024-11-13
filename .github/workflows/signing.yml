@@ -22,8 +22,8 @@ jobs:
         uses: Cawllec/release-signer@v0.1.0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
+          organization: ${{ github.event.organization }}
+          repository: ${{ github.event.repository }}
           release_tag: ${{ github.event.inputs.tag }}
           key_id: ${{ secrets.TEST_GPG_KEY_ID }}
           key_passphrase: ${{ secrets.TEST_GPG_PASSPHRASE }}
-          organization: ${{ github.event.organization }}
-          repository: ${{ github.event.repository }}
